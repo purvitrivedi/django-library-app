@@ -1,0 +1,9 @@
+from django.urls import path
+
+from . import views
+
+urlpatterns = [
+    path('', views.home, name="home"),
+    path('books/', views.BookList.as_view(), name="books-index")
+
+]
