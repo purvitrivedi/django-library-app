@@ -3,4 +3,8 @@
 
 <p>{{book.name}}</p>
 <p>{{book.author}}</p>
+
+<a href="{% url 'book-update' book.id %}">Edit</a>
+<a href="{% url 'book-delete' book.id %}">Delete</a>
+
 {% endblock %}
