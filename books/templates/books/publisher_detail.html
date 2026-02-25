@@ -20,16 +20,21 @@
   {% csrf_token %} {{book_form.as_p}}
   <button type="submit">Submit</button>
 </form>
-
 <h2>Books without any publishers:</h2>
+{% if books_without_publisher.count %}
 <ul>
   {% for book in books_without_publisher %}
-  <li>{{book.name}} by {{book.author}}</li>
+  <li>
+    <a href="{% url 'book-detail' book.id %}"
+      >{{book.name}} by {{book.author}}</a
+    >
+  </li>
   <form action="{% url 'associate-book' publisher.id book.id %}" method="post">
     {% csrf_token %}
     <button type="submit">Add to Publisher</button>
   </form>
   {% endfor %}
 </ul>
-
-{% endblock %}
+{% else %}
+<p>There are no books without publishers</p>
+{% endif %} {% endblock %}
