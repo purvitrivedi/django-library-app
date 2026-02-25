@@ -39,6 +39,22 @@ class PublisherDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
+        books_without_publisher = Book.objects.filter(publisher__isnull=True)
         context["book_form"] = BookForm
+        context["books_without_publisher"] = books_without_publisher
         return context
     
+def add_book_to_publisher(request, pk):
+    form = BookForm(request.POST)
+    if form.is_valid():
+        new_book = form.save(commit=False)
+        new_book.publisher_id = pk
+        new_book.save()
+    return redirect('publisher-detail', pk=pk)
+
+def associate_book(request, publisher_id, book_id):
+    book = Book.objects.get(id=book_id)
+    book.publisher_id = publisher_id
+    book.save()
+
+    return redirect('publisher-detail', pk=publisher_id)
