@@ -1,0 +1,11 @@
+{% extends "base.html" %} {% block content %}
+
+<h1>Publisher list</h1>
+<ul>
+  {% for pub in publisher_list %}
+  <li>
+    <a href="{% url 'publisher-detail' pub.id %}">{{pub.get_name_display}} </a>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

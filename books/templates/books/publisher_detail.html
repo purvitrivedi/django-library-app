@@ -1,0 +1,16 @@
+{% extends "base.html" %} {% block content %}
+<h1>This is the publisher detail page</h1>
+
+<p>{{publisher.get_name_display}}</p>
+
+<h2>Current Books by Publisher:</h2>
+<ul>
+  {% for book in publisher.book_set.all %}
+  <li>
+    <a href="{% url 'book-detail' book.id %}"
+      >{{book.name}} by {{book.author}}</a
+    >
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

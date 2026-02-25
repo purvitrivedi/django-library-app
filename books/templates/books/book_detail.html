@@ -1,8 +1,9 @@
 {% extends "base.html" %} {% block content %}
 <h1>This is the book detail page</h1>
 
-<p>{{book.name}}</p>
-<p>{{book.author}}</p>
+<p>Name: {{book.name}}</p>
+<p>Author: {{book.author}}</p>
+<p>Publisher: {{book.publisher}}</p>
 
 <a href="{% url 'book-update' book.id %}">Edit</a>
 <a href="{% url 'book-delete' book.id %}">Delete</a>
