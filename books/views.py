@@ -3,8 +3,8 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
-from .models import Book, Publisher
-from .forms import BookForm
+from .models import Book, Publisher, Genre
+from .forms import BookForm, GenreForm
 
 
 # Create your views here.
@@ -18,13 +18,21 @@ class BookList(ListView):
 class BookDetail(DetailView):
     model = Book
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        all_genre = Genre.objects.all()
+        genre_form = GenreForm()
+        context['all_genre'] = all_genre
+        context['genre_form'] = genre_form
+        return context
+
 class BookCreate(CreateView):
     model = Book
     fields = '__all__'
 
 class BookUpdate(UpdateView):
     model = Book
-    fields = '__all__'
+    fields = ['name', 'author', 'publisher']
 
 class BookDelete(DeleteView):
     model = Book
@@ -38,9 +46,9 @@ class PublisherDetail(DetailView):
     model = Publisher
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data()
+        context = super().get_context_data(**kwargs)
         books_without_publisher = Book.objects.filter(publisher__isnull=True)
-        context["book_form"] = BookForm
+        context["book_form"] = BookForm()
         context["books_without_publisher"] = books_without_publisher
         return context
     
@@ -58,3 +66,29 @@ def associate_book(request, publisher_id, book_id):
     book.save()
 
     return redirect('publisher-detail', pk=publisher_id)
+
+def associate_genre(request, pk):
+    book = Book.objects.get(id=pk)
+    selected_genre_ids = request.POST.getlist('genre')
+
+    if selected_genre_ids:
+        selected_genre_ids = [int(genre_id) for genre_id in selected_genre_ids]
+        book.genre.set(selected_genre_ids)
+    else:
+        book.genre.clear()
+
+    return redirect('book-detail', pk=pk)
+
+
+def add_and_associate_genre(request, pk):
+    book = Book.objects.get(id=pk)
+    form = GenreForm(request.POST)
+
+    if form.is_valid():
+        new_genre = form.save()
+        book.genre.add(new_genre.id)
+        return redirect('book-detail', pk=pk)
+    
+
+
+

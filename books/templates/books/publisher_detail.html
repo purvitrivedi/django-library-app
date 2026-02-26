@@ -20,6 +20,8 @@
   {% csrf_token %} {{book_form.as_p}}
   <button type="submit">Submit</button>
 </form>
+
+
 <h2>Books without any publishers:</h2>
 {% if books_without_publisher.count %}
 <ul>

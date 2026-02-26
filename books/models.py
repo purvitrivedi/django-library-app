@@ -16,11 +16,19 @@ class Publisher(models.Model):
     def __str__(self):
         return self.get_name_display()
 
+
+class Genre(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
 class Book(models.Model):
     name = models.CharField(max_length=50)
     author = models.CharField(max_length=50)
 
     publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE, null=True, blank=True)
+    genre = models.ManyToManyField(Genre)
 
     def __str__(self):
         return f'{self.name} by {self.author}'
